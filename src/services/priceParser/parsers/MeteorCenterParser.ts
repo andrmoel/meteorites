@@ -52,7 +52,7 @@ export default class MeteorCenterParser implements Parser {
             const dashIndex = title.indexOf(' \u2013 ');
             const name = dashIndex !== -1 ? title.slice(0, dashIndex).trim() : title;
 
-            meteorites.push({name, weight, price});
+            meteorites.push({name, weight, price, currency: 'EUR'});
         });
 
         return meteorites;

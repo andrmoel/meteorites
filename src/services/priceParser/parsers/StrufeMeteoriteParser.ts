@@ -206,6 +206,6 @@ export default class StrufeMeteoriteParser implements Parser {
 
         const name = product.name.replace(/\s*\(\s*[\d,]+\s*g\s*\)\s*$/, '').trim();
 
-        return {name, weight, price: product.price};
+        return {name, weight, price: product.price, currency: 'EUR'};
     }
 }
