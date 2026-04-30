@@ -11,24 +11,18 @@ export default class DeckerMeteoriteParser implements Parser {
     async getMeteoritePrices(): Promise<Array<MeteoritePrice>> {
         const results: Array<MeteoritePrice> = [];
 
-        console.log('Fetching page 1...');
         const firstResponse = await axios.get<string>(this.baseUrl, {params: {p: 1, n: 36}});
         let $ = cheerio.load(firstResponse.data);
 
         results.push(...this.parseProductsFromPage($));
         const lastPage = parseInt($('[data-pages]').attr('data-pages') ?? '1', 10);
-        console.log(`Page 1: found ${results.length} meteorites, total pages: ${lastPage}`);
 
         for (let page = 2; page <= lastPage; page++) {
-            console.log(`Fetching page ${page}/${lastPage}...`);
             const response = await axios.get<string>(this.baseUrl, {params: {p: page, n: 36}});
             $ = cheerio.load(response.data);
-            const pageItems = this.parseProductsFromPage($);
-            results.push(...pageItems);
-            console.log(`Page ${page}: found ${pageItems.length} meteorites (total: ${results.length})`);
+            results.push(...this.parseProductsFromPage($));
         }
 
-        console.log(`Done. Total meteorites: ${results.length}`);
         return results;
     }
 

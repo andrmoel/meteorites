@@ -163,7 +163,6 @@ export default class StrufeMeteoriteParser implements Parser {
         let totalCount = Infinity;
 
         while (offset < totalCount) {
-            console.log(`Fetching offset ${offset}...`);
             const response = await axios.post(API_URL, {
                 variables: {
                     mainCollectionId: '00000000-000000-000000-000000000001',
@@ -190,7 +189,6 @@ export default class StrufeMeteoriteParser implements Parser {
             }
 
             offset += list.length;
-            console.log(`Fetched ${list.length} products (total so far: ${results.length}/${totalCount})`);
         }
 
         return results;

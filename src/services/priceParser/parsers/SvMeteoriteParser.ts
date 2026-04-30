@@ -11,14 +11,11 @@ export default class SvMeteoriteParser implements Parser {
     async getMeteoritePrices(): Promise<Array<MeteoritePrice>> {
         const results: Array<MeteoritePrice> = [];
 
-        console.log('Fetching page 1...');
         const firstResponse = await axios.get<string>(this.baseUrl);
         let $ = cheerio.load(firstResponse.data);
 
         results.push(...this.parseProductsFromPage($));
-        console.log(`Page 1: found ${results.length} meteorites`);
 
-        let page = 1;
         while (true) {
             const nextTarget = this.getNextPageEventTarget($);
             if (!nextTarget) break;
@@ -31,19 +28,14 @@ export default class SvMeteoriteParser implements Parser {
                 __EVENTVALIDATION: ($('input[name="__EVENTVALIDATION"]').val() as string) ?? '',
             });
 
-            page++;
-            console.log(`Fetching page ${page}...`);
             const response = await axios.post<string>(this.baseUrl, body.toString(), {
                 headers: {'Content-Type': 'application/x-www-form-urlencoded'},
             });
 
             $ = cheerio.load(response.data);
-            const pageItems = this.parseProductsFromPage($);
-            results.push(...pageItems);
-            console.log(`Page ${page}: found ${pageItems.length} meteorites (total: ${results.length})`);
+            results.push(...this.parseProductsFromPage($));
         }
 
-        console.log(`Done. Total meteorites: ${results.length}`);
         return results;
     }
 
