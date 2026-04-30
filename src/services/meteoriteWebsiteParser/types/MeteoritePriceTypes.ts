@@ -11,7 +11,7 @@ export type MeteoritePrice = {
 export type DailyMeteoritePrice = {
     meteoriteName: string;
     date: string;
-    pricePerGrammInUsd: number;
+    averagePricePerGrammInUsd: number;
     pricePerGrammHigh: number;
     pricePerGrammLow: number;
 }

@@ -6,8 +6,8 @@ export default function cleanMeteoriteName(name: string): string {
         .replace(/\s*-\s*Main\s+Mass\b.*/gi, '') // remove "- Main Mass" suffix and everything after
         .replace(/^\d+\s+/, '') // remove leading catalogue number, e.g. "4 NWA XXX" → "NWA XXX"
         .replace(/\s*-+\s*$/, '') // remove trailing dashes
-        .replace(/[^a-zA-Z0-9\s\-'].*$/, '') // strip everything from the first special character onwards, e.g. "Bechar 003/006" → "Bechar 003"
-        .replace(/[^a-zA-Z0-9\s]/g, '') // remove remaining special characters (apostrophes, hyphens, etc.)
+        .replace(/[|\-\/(\[\]),.#~+*!?].*$/, '') // strip everything from the first special character onwards, e.g. "Bechar 003/006" → "Bechar 003"
+        .replace(/[^\p{L}\p{N}\s]/gu, '') // remove remaining special characters (apostrophes, hyphens, etc.)
         .replace(/\s+/g, ' ') // collapse multiple spaces into one
         .replace(/(\d+)\s+\S*[a-zA-Z].*$/, '$1') // strip any text after the last catalogue number, e.g. "NWA 17101 398g" → "NWA 17101"
         .replace(/\b([A-Z]{2,})\b/g, (word) => word === 'NWA' || word === 'NEA' ? word : word[0] + word.slice(1).toLowerCase()) // title-case ALL-CAPS words, keeping NWA/NEA uppercase

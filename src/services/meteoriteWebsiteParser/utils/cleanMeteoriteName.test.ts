@@ -171,3 +171,7 @@ it('strips variant suffix after slash', () => {
 it('keeps letters and numbers', () => {
     expect(cleanMeteoriteName('Allende 12')).toBe('Allende 12');
 });
+
+it('does not strip accented characters', () => {
+    expect(cleanMeteoriteName('Rubelios de la Cérida')).toBe('Rubelios de la Cérida');
+});
