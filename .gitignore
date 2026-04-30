@@ -3,6 +3,7 @@
 *.d.ts
 node_modules
 .idea
+.next
 
 # CDK asset staging directory
 .cdk.staging

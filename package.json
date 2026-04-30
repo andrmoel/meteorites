@@ -11,6 +11,7 @@
     "cdk:deploy": "cdk deploy --all --require-approval never"
   },
   "dependencies": {
+    "@aws-cdk/aws-amplify-alpha": "^2.252.0-alpha.0",
     "@aws-sdk/client-dynamodb": "^3.1039.0",
     "@aws-sdk/lib-dynamodb": "^3.1039.0",
     "aws-cdk-lib": "^2.248.0",

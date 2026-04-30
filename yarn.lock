@@ -12,6 +12,11 @@
   resolved "https://registry.npmjs.org/@aws-cdk/asset-node-proxy-agent-v6/-/asset-node-proxy-agent-v6-2.1.1.tgz"
   integrity sha512-We4bmHaowOPHr+IQR4/FyTGjRfjgBj4ICMjtqmJeBDWad3Q/6St12NT07leNtyuukv2qMhtSZJQorD8KpKTwRA==
 
+"@aws-cdk/aws-amplify-alpha@^2.252.0-alpha.0":
+  version "2.252.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-amplify-alpha/-/aws-amplify-alpha-2.252.0-alpha.0.tgz#18a584eaa2425394182a3c039ec629ca095c5421"
+  integrity sha512-fWdqqb8+i+PybmmlYPCylxKIXMJkT2Dmayk9mZhNe66DfQvWD+Yaw2GoJrbRV9khZuB6O84fOnpMp7d6Exv7vA==
+
 "@aws-cdk/cloud-assembly-api@^2.2.2":
   version "2.2.2"
   resolved "https://registry.npmjs.org/@aws-cdk/cloud-assembly-api/-/cloud-assembly-api-2.2.2.tgz"
