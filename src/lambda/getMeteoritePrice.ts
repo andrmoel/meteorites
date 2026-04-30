@@ -10,9 +10,10 @@ export async function handler(event: APIGatewayProxyEventV2): Promise<APIGateway
 
     const entries = await getDailyMeteoritePricesReportRepository().getByName(decodeURIComponent(name));
 
-    const body = entries.map(({ date, averagePricePerGrammInUsd, pricePerGrammHigh, pricePerGrammLow, numberOfSamples }) => ({
+    const body = entries.map(({ date, averagePricePerGrammInUsd, medianPricePerGrammInUsd, pricePerGrammHigh, pricePerGrammLow, numberOfSamples }) => ({
         date,
         averagePricePerGrammInUsd,
+        medianPricePerGrammInUsd,
         pricePerGrammHigh,
         pricePerGrammLow,
         numberOfSamples,

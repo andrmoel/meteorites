@@ -9,6 +9,7 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://ov2v50dhb3.execute-
 type PriceEntry = {
     date: string;
     averagePricePerGrammInUsd: number;
+    medianPricePerGrammInUsd: number;
     pricePerGrammHigh: number;
     pricePerGrammLow: number;
     numberOfSamples: number;
@@ -157,6 +158,7 @@ export default function Home() {
                         <Tooltip content={<ChartTooltip />} />
                         <Legend />
                         <Line type="monotone" dataKey="averagePricePerGrammInUsd" name="Avg $/g" stroke="#6366f1" dot={false} strokeWidth={2} />
+                        <Line type="monotone" dataKey="medianPricePerGrammInUsd" name="Median $/g" stroke="#f59e0b" dot={false} strokeWidth={2} strokeDasharray="6 2" />
                         <Line type="monotone" dataKey="pricePerGrammHigh" name="High $/g" stroke="#22c55e" dot={false} strokeDasharray="4 2" />
                         <Line type="monotone" dataKey="pricePerGrammLow" name="Low $/g" stroke="#ef4444" dot={false} strokeDasharray="4 2" />
                     </LineChart>

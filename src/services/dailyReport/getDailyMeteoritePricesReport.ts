@@ -25,10 +25,17 @@ export default async function getDailyMeteoritePricesReport(
     return Array.from(groups.entries()).map(([meteoriteName, prices]) => {
         const average = prices.reduce((sum, p) => sum + p, 0) / prices.length;
 
+        const sorted = [...prices].sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        const median = sorted.length % 2 === 0
+            ? (sorted[mid - 1] + sorted[mid]) / 2
+            : sorted[mid];
+
         return {
             meteoriteName,
             date: dateToday,
             averagePricePerGrammInUsd: round(average, 2),
+            medianPricePerGrammInUsd: round(median, 2),
             pricePerGrammHigh: round(Math.max(...prices), 2),
             pricePerGrammLow: round(Math.min(...prices), 2),
             numberOfSamples: prices.length,
