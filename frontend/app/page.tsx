@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import type { TooltipProps } from 'recharts';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? 'https://ov2v50dhb3.execute-api.eu-central-1.amazonaws.com';
 
@@ -10,7 +11,26 @@ type PriceEntry = {
     averagePricePerGrammInUsd: number;
     pricePerGrammHigh: number;
     pricePerGrammLow: number;
+    numberOfSamples: number;
 };
+
+function ChartTooltip({ active, payload, label }: TooltipProps<number, string>) {
+    if (!active || !payload?.length) return null;
+    const entry = payload[0].payload as PriceEntry;
+    return (
+        <div style={{ background: '#fff', border: '1px solid #ccc', borderRadius: 4, padding: '0.5rem 0.75rem', fontSize: '0.875rem' }}>
+            <p style={{ margin: '0 0 0.4rem 0', fontWeight: 600 }}>{label}</p>
+            {payload.map((p) => (
+                <p key={p.dataKey as string} style={{ margin: '0.2rem 0', color: p.color }}>
+                    {p.name}: ${(p.value as number).toFixed(2)}
+                </p>
+            ))}
+            <p style={{ margin: '0.4rem 0 0', color: '#666', borderTop: '1px solid #eee', paddingTop: '0.4rem' }}>
+                Samples: {entry.numberOfSamples}
+            </p>
+        </div>
+    );
+}
 
 export default function Home() {
     const [name, setName] = useState('Tarda');
@@ -134,7 +154,7 @@ export default function Home() {
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="date" />
                         <YAxis unit=" $" />
-                        <Tooltip formatter={(value: number) => [`$${value.toFixed(2)}`, '']} />
+                        <Tooltip content={<ChartTooltip />} />
                         <Legend />
                         <Line type="monotone" dataKey="averagePricePerGrammInUsd" name="Avg $/g" stroke="#6366f1" dot={false} strokeWidth={2} />
                         <Line type="monotone" dataKey="pricePerGrammHigh" name="High $/g" stroke="#22c55e" dot={false} strokeDasharray="4 2" />

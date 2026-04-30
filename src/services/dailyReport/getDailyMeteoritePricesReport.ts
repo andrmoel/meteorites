@@ -31,6 +31,7 @@ export default async function getDailyMeteoritePricesReport(
             averagePricePerGrammInUsd: round(average, 2),
             pricePerGrammHigh: round(Math.max(...prices), 2),
             pricePerGrammLow: round(Math.min(...prices), 2),
+            numberOfSamples: prices.length,
         };
     });
 }
