@@ -45,7 +45,27 @@ export class MeteoritePricesStack extends cdk.Stack {
 
         table.grantReadData(getMeteoritePriceLambda);
 
-        const api = new apigwv2.HttpApi(this, 'MeteoritePricesApi');
+        const getMeteoriteNamesLambda = new nodejs.NodejsFunction(this, 'GetMeteoriteNames', {
+            entry: path.join(__dirname, '../src/lambda/getMeteoriteNames.ts'),
+            handler: 'handler',
+            runtime: lambda.Runtime.NODEJS_24_X,
+            timeout: cdk.Duration.seconds(10),
+        });
+
+        table.grantReadData(getMeteoriteNamesLambda);
+
+        const api = new apigwv2.HttpApi(this, 'MeteoritePricesApi', {
+            corsPreflight: {
+                allowOrigins: ['*'],
+                allowMethods: [apigwv2.CorsHttpMethod.GET],
+            },
+        });
+
+        api.addRoutes({
+            path: '/meteorites',
+            methods: [apigwv2.HttpMethod.GET],
+            integration: new HttpLambdaIntegration('GetMeteoriteNamesIntegration', getMeteoriteNamesLambda),
+        });
 
         api.addRoutes({
             path: '/meteorites/{name}',

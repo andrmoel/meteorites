@@ -32,22 +32,57 @@ export class DailyMeteoritePricesReportRepository {
     }
 
     async putAll(entries: Array<DailyMeteoritePrice>): Promise<void> {
-        for (let i = 0; i < entries.length; i += 25) {
-            const batch = entries.slice(i, i + 25);
-            await this.client.send(new BatchWriteCommand({
-                RequestItems: {
-                    [TABLE_NAME]: batch.map((entry) => ({
-                        PutRequest: {
-                            Item: {
-                                PK: `DAILY_REPORT#${entry.meteoriteName}`,
-                                SK: `DAILY_REPORT#${entry.date}`,
-                                ...entry,
-                            },
-                        },
-                    })),
+        const catalogItems = [...new Set(entries.map((e) => e.meteoriteName))].map((name) => ({
+            PutRequest: {
+                Item: {
+                    PK: 'METEORITE_CATALOG',
+                    SK: `NAME#${name}`,
+                    meteoriteName: name,
                 },
+            },
+        }));
+
+        const allItems = [
+            ...entries.map((entry) => ({
+                PutRequest: {
+                    Item: {
+                        PK: `DAILY_REPORT#${entry.meteoriteName}`,
+                        SK: `DAILY_REPORT#${entry.date}`,
+                        ...entry,
+                    },
+                },
+            })),
+            ...catalogItems,
+        ];
+
+        for (let i = 0; i < allItems.length; i += 25) {
+            await this.client.send(new BatchWriteCommand({
+                RequestItems: { [TABLE_NAME]: allItems.slice(i, i + 25) },
             }));
         }
+    }
+
+    async getAllMeteoriteNames(): Promise<Array<string>> {
+        const names: string[] = [];
+        let lastEvaluatedKey: Record<string, unknown> | undefined;
+
+        do {
+            const response = await this.client.send(new QueryCommand({
+                TableName: TABLE_NAME,
+                KeyConditionExpression: 'PK = :pk',
+                ExpressionAttributeValues: { ':pk': 'METEORITE_CATALOG' },
+                ProjectionExpression: 'meteoriteName',
+                ExclusiveStartKey: lastEvaluatedKey,
+            }));
+
+            for (const item of response.Items ?? []) {
+                names.push(item['meteoriteName'] as string);
+            }
+
+            lastEvaluatedKey = response.LastEvaluatedKey as Record<string, unknown> | undefined;
+        } while (lastEvaluatedKey !== undefined);
+
+        return names;
     }
 }
 
