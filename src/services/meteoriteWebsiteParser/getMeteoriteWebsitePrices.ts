@@ -31,10 +31,16 @@ export default async function getMeteoriteWebsitePrices(): Promise<Array<Meteori
 
     const result = await Promise.all(
         parsers.map(async (parser) => {
-            const result = await parser.getMeteoritePrices();
+            try {
+                const result = await parser.getMeteoritePrices();
 
-            console.log(`${parser.constructor.name}: ${result.length} results`);
-            return result;
+                console.log(`${parser.constructor.name}: ${result.length} results`);
+                return result;
+            } catch (error) {
+                console.error(`Fail to parse ${parser.constructor.name}`);
+
+                return [];
+            }
         })
     );
 

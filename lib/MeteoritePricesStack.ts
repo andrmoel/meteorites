@@ -21,8 +21,9 @@ export class MeteoritePricesStack extends cdk.Stack {
 
         const scanLambda = new nodejs.NodejsFunction(this, 'ScanMeteoriteWebsites', {
             entry: path.join(__dirname, '../src/lambda/scanMeteoriteWebsites.ts'),
-            handler: 'default',
+            handler: 'handler',
             runtime: lambda.Runtime.NODEJS_24_X,
+            memorySize: 1024,
             timeout: cdk.Duration.minutes(5),
         });
 

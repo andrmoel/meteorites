@@ -16,21 +16,31 @@ type WcProduct = {
     };
 };
 
+const RETRIES = 3;
+
 export default class AllmeteoriteParser implements Parser {
     async getMeteoritePrices(): Promise<Array<MeteoritePrice>> {
-        const firstResponse = await axios.get<WcProduct[]>(API_BASE, {
-            params: {per_page: PER_PAGE, page: 1},
-        });
+        const firstResponse = await this.get(1);
 
         const totalPages = parseInt(firstResponse.headers['x-wp-totalpages'] ?? '1', 10);
         const results: Array<MeteoritePrice> = this.parseProducts(firstResponse.data);
 
         for (let page = 2; page <= totalPages; page++) {
-            const response = await axios.get<WcProduct[]>(API_BASE, {params: {per_page: PER_PAGE, page}});
+            const response = await this.get(page);
             results.push(...this.parseProducts(response.data));
         }
 
         return results;
+    }
+
+    private async get(page: number, attempt = 1): Promise<Awaited<ReturnType<typeof axios.get<WcProduct[]>>>> {
+        try {
+            return await axios.get<WcProduct[]>(API_BASE, {params: {per_page: PER_PAGE, page}});
+        } catch (err) {
+            if (attempt >= RETRIES) throw err;
+            await new Promise((resolve) => setTimeout(resolve, 1000 * Math.pow(2, attempt - 1)));
+            return this.get(page, attempt + 1);
+        }
     }
 
     private parseProducts(products: WcProduct[]): Array<MeteoritePrice> {
