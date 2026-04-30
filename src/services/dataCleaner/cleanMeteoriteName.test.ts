@@ -156,12 +156,16 @@ it('removes plural forms like "fragments"', () => {
     expect(cleanMeteoriteName('Allende fragments')).toBe('Allende');
 });
 
-it('removes special characters', () => {
-    expect(cleanMeteoriteName('NWA 1234 #5')).toBe('NWA 1234 5');
+it('strips everything after a special character', () => {
+    expect(cleanMeteoriteName('NWA 1234 #5')).toBe('NWA 1234');
 });
 
-it('removes slash', () => {
-    expect(cleanMeteoriteName('NWA 1234/5')).toBe('NWA 12345');
+it('strips everything after a slash', () => {
+    expect(cleanMeteoriteName('NWA 1234/5')).toBe('NWA 1234');
+});
+
+it('strips variant suffix after slash', () => {
+    expect(cleanMeteoriteName('Bechar 003/006')).toBe('Bechar 003');
 });
 
 it('keeps letters and numbers', () => {
