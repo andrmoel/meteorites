@@ -1,7 +1,7 @@
 import cleanMeteoriteName from './cleanMeteoriteName';
 
 it('removes content in parentheses', () => {
-    expect(cleanMeteoriteName('FOO (bla)')).toBe('FOO');
+    expect(cleanMeteoriteName('FOO (bla)')).toBe('Foo');
 });
 
 it('removes classification in parentheses', () => {
@@ -86,4 +86,44 @@ it('removes the word "moon"', () => {
 
 it('removes words containing "moon" (e.g. "moonrock")', () => {
     expect(cleanMeteoriteName('Allende moonrock')).toBe('Allende');
+});
+
+it('removes "- Main Mass -" suffix', () => {
+    expect(cleanMeteoriteName('NWA 6846 - Main Mass -')).toBe('NWA 6846');
+});
+
+it('removes "- Main Mass" suffix without trailing dash', () => {
+    expect(cleanMeteoriteName('NWA 6846 - Main Mass')).toBe('NWA 6846');
+});
+
+it('removes leading number', () => {
+    expect(cleanMeteoriteName('4 NWA XXX')).toBe('NWA Xxx');
+});
+
+it('removes trailing dash', () => {
+    expect(cleanMeteoriteName('NWA XXX -')).toBe('NWA Xxx');
+});
+
+it('removes leading number and trailing dash', () => {
+    expect(cleanMeteoriteName('4 NWA XXX -')).toBe('NWA Xxx');
+});
+
+it('converts uppercase name to title case', () => {
+    expect(cleanMeteoriteName('ERG CHECH 002')).toBe('Erg Chech 002');
+});
+
+it('keeps NWA uppercase', () => {
+    expect(cleanMeteoriteName('NWA 1234')).toBe('NWA 1234');
+});
+
+it('removes special characters', () => {
+    expect(cleanMeteoriteName('NWA 1234 #5')).toBe('NWA 1234 5');
+});
+
+it('removes slash', () => {
+    expect(cleanMeteoriteName('NWA 1234/5')).toBe('NWA 12345');
+});
+
+it('keeps letters and numbers', () => {
+    expect(cleanMeteoriteName('Allende 12')).toBe('Allende 12');
 });
