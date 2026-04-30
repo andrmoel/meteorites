@@ -1,6 +1,7 @@
 import {MeteoritePrice} from "../types/MeteoritePriceTypes";
 import axios from "axios";
 import Parser from "./Parser";
+import {Currency} from "../../currency/enums/Currency";
 
 const API_BASE = 'https://aerolite.org/wp-json/wc/store/v1/products';
 const PER_PAGE = 100;
@@ -57,7 +58,7 @@ export default class AeroliteMeteoritesParser implements Parser {
         const price = parseInt(product.prices.price, 10) / Math.pow(10, product.prices.currency_minor_unit);
         if (isNaN(price) || price <= 0) return null;
 
-        const currency = product.prices.currency_code === 'USD' ? 'USD' : 'EUR';
+        const currency = product.prices.currency_code === 'USD' ? Currency.USD : Currency.EUR;
 
         // Strip the weight and everything after it from the name
         const weightIndex = product.name.search(/\s*\d+(?:\.\d+)?\s*(?:kg|g)\b/i);

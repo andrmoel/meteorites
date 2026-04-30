@@ -1,4 +1,5 @@
 import Parser from "./Parser";
+import {Currency} from "../../currency/enums/Currency";
 import {MeteoritePrice} from "../types/MeteoritePriceTypes";
 import axios from "axios";
 import * as cheerio from "cheerio";
@@ -46,7 +47,7 @@ export default class MeteorCenterParser implements Parser {
             const dashIndex = title.indexOf(' \u2013 ');
             const name = dashIndex !== -1 ? title.slice(0, dashIndex).trim() : title;
 
-            meteorites.push({name, weight, price, currency: 'EUR'});
+            meteorites.push({name, weight, price, currency: Currency.EUR});
         });
 
         return meteorites;

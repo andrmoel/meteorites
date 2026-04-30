@@ -1,7 +1,17 @@
+import {Currency} from "../../currency/enums/Currency";
+
 export type MeteoritePrice = {
     name: string, // Meteorite name
     weight: number, // Weight in gramm
     price: number, // Price in Euro
-    currency: 'EUR' | 'USD',
+    currency: Currency,
     pricePerGramm?: number, // Price in Euro per gramm
+}
+
+export type DailyMeteoritePrice = {
+    meteoriteName: string;
+    date: string;
+    pricePerGrammInUsd: number;
+    pricePerGrammHigh: number;
+    pricePerGrammLow: number;
 }

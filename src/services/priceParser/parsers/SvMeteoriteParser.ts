@@ -1,4 +1,5 @@
 import Parser from "./Parser";
+import {Currency} from "../../currency/enums/Currency";
 import {MeteoritePrice} from "../types/MeteoritePriceTypes";
 import axios from "axios";
 import * as cheerio from "cheerio";
@@ -61,7 +62,7 @@ export default class SvMeteoriteParser implements Parser {
             const price = parseFloat(priceMatch[1].replace(/,/g, ''));
             if (isNaN(price)) return;
 
-            meteorites.push({name, weight, price, currency: 'USD'});
+            meteorites.push({name, weight, price, currency: Currency.USD});
         });
 
         return meteorites;

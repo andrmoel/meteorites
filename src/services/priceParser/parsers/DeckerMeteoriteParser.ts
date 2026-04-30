@@ -1,4 +1,5 @@
 import Parser from "./Parser";
+import {Currency} from "../../currency/enums/Currency";
 import {MeteoritePrice} from "../types/MeteoritePriceTypes";
 import axios from "axios";
 import * as cheerio from "cheerio";
@@ -47,7 +48,7 @@ export default class DeckerMeteoriteParser implements Parser {
 
             const name = title.slice(0, title.lastIndexOf(' -')).trim();
 
-            meteorites.push({name, weight, price, currency: 'EUR'});
+            meteorites.push({name, weight, price, currency: Currency.EUR});
         });
 
         return meteorites;
