@@ -1,4 +1,4 @@
-import { BatchWriteCommand, DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
+import { BatchWriteCommand, DynamoDBDocumentClient, PutCommand, QueryCommand } from '@aws-sdk/lib-dynamodb';
 import { DailyMeteoritePrice } from '../services/meteoriteWebsiteParser/types/MeteoritePriceTypes';
 
 const TABLE_NAME = 'MeteoritePrices';
@@ -19,6 +19,16 @@ export class DailyMeteoritePricesReportRepository {
                 ...entry,
             },
         }));
+    }
+
+    async getByName(meteoriteName: string): Promise<Array<DailyMeteoritePrice>> {
+        const response = await this.client.send(new QueryCommand({
+            TableName: TABLE_NAME,
+            KeyConditionExpression: 'PK = :pk',
+            ExpressionAttributeValues: { ':pk': `DAILY_REPORT#${meteoriteName}` },
+        }));
+
+        return (response.Items ?? []) as Array<DailyMeteoritePrice>;
     }
 
     async putAll(entries: Array<DailyMeteoritePrice>): Promise<void> {

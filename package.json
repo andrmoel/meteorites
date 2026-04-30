@@ -23,6 +23,7 @@
   "devDependencies": {
     "@swc/core": "^1.15.32",
     "@swc/jest": "^0.2.39",
+    "@types/aws-lambda": "^8.10.161",
     "@types/jest": "^30",
     "@types/lodash": "^4.17.24",
     "@types/node": "^24.10.1",
