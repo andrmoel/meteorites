@@ -14,6 +14,7 @@ import MsgMeteoritesParser from "./parsers/MsgMeteoritesParser";
 import IsaMeteoritesParser from "./parsers/IsaMeteoritesParser";
 import PeltraMineralsParser from "./parsers/PeltraMineralsParser";
 import cleanData from "./utils/cleanData";
+import MeteoritesForSaleParser from "./parsers/MeteoritesForSaleParser";
 
 export default async function getMeteoriteWebsitePrices(): Promise<Array<MeteoritePrice>> {
     const parsers: Array<Parser> = [
@@ -22,6 +23,7 @@ export default async function getMeteoriteWebsitePrices(): Promise<Array<Meteori
         new DeckerMeteoriteParser(),
         new IsaMeteoritesParser(),
         new MeteorCenterParser(),
+        new MeteoritesForSaleParser(),
         new MsgMeteoritesParser(),
         new PeltraMineralsParser(),
         new PolandmetParser(),
