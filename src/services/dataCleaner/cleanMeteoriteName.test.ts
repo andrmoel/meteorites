@@ -116,6 +116,46 @@ it('keeps NWA uppercase', () => {
     expect(cleanMeteoriteName('NWA 1234')).toBe('NWA 1234');
 });
 
+it('keeps NEA uppercase', () => {
+    expect(cleanMeteoriteName('NEA 104')).toBe('NEA 104');
+});
+
+it('strips text after number', () => {
+    expect(cleanMeteoriteName('NWA 1234 individual')).toBe('NWA 1234');
+});
+
+it('strips weight annotation after catalog number', () => {
+    expect(cleanMeteoriteName('NWA 17101 398g')).toBe('NWA 17101');
+});
+
+it('strips multiple words after number', () => {
+    expect(cleanMeteoriteName('NEA 104 slice complete stone')).toBe('NEA 104');
+});
+
+it('removes the word "individual"', () => {
+    expect(cleanMeteoriteName('Allende individual')).toBe('Allende');
+});
+
+it('removes the word "complete"', () => {
+    expect(cleanMeteoriteName('Allende complete')).toBe('Allende');
+});
+
+it('removes the word "stone"', () => {
+    expect(cleanMeteoriteName('Allende stone')).toBe('Allende');
+});
+
+it('removes the word "slice"', () => {
+    expect(cleanMeteoriteName('Allende slice')).toBe('Allende');
+});
+
+it('removes the word "fragment"', () => {
+    expect(cleanMeteoriteName('Allende fragment')).toBe('Allende');
+});
+
+it('removes plural forms like "fragments"', () => {
+    expect(cleanMeteoriteName('Allende fragments')).toBe('Allende');
+});
+
 it('removes special characters', () => {
     expect(cleanMeteoriteName('NWA 1234 #5')).toBe('NWA 1234 5');
 });
