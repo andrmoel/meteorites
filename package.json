@@ -8,9 +8,11 @@
     "build": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "cdk": "cdk"
+    "cdk:deploy": "cdk deploy --all --require-approval never"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1039.0",
+    "@aws-sdk/lib-dynamodb": "^3.1039.0",
     "aws-cdk-lib": "^2.248.0",
     "axios": "^1.15.2",
     "cheerio": "^1.2.0",
@@ -25,6 +27,7 @@
     "@types/lodash": "^4.17.24",
     "@types/node": "^24.10.1",
     "aws-cdk": "2.1119.0",
+    "esbuild": "^0.28.0",
     "jest": "^30.3.0",
     "ts-node": "^10.9.2",
     "typescript": "~5.9.3"
