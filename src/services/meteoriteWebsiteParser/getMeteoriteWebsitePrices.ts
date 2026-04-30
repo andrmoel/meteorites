@@ -17,19 +17,16 @@ import cleanData from "./utils/cleanData";
 
 export default async function getMeteoriteWebsitePrices(): Promise<Array<MeteoritePrice>> {
     const parsers: Array<Parser> = [
-        // new AeroliteMeteoritesParser(),
-        // new AllmeteoriteParser(),
-        // new DeckerMeteoriteParser(),
-        // new IsaMeteoritesParser(),
-        // new IvesmirParser(),
-        // new MeteoloversParser(),
+        new AeroliteMeteoritesParser(),
+        new AllmeteoriteParser(),
+        new DeckerMeteoriteParser(),
+        new IsaMeteoritesParser(),
         new MeteorCenterParser(),
-        // new MsgMeteoritesParser(),
-        // new PeltraMineralsParser(),
-        // new PolandmetParser(),
-        // new StrufeMeteoriteParser(),
-        // new SunOrgParser(),
-        // new SvMeteoriteParser(),
+        new MsgMeteoritesParser(),
+        new PeltraMineralsParser(),
+        new PolandmetParser(),
+        new StrufeMeteoriteParser(),
+        new SvMeteoriteParser(),
     ];
 
     const result = await Promise.all(

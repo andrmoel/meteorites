@@ -1,4 +1,4 @@
-import {MeteoritePrice} from "../priceParser/types/MeteoritePriceTypes";
+import {MeteoritePrice} from "../types/MeteoritePriceTypes";
 import {calculatePricePerGramm} from "./calculatePricePerGramm";
 import cleanMeteoriteName from "./cleanMeteoriteName";
 
