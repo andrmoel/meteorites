@@ -3,12 +3,11 @@ import {Currency} from "../../currency/enums/Currency";
 import {MeteoritePrice} from "../types/MeteoritePriceTypes";
 import axios from "axios";
 
-const API_URL = 'https://www.strufe.net/_api/wix-ecommerce-storefront-web/api';
+const BASE_URL = 'https://www.strufe.net';
+const API_URL = `${BASE_URL}/_api/wix-ecommerce-storefront-web/api`;
 
-const HEADERS = {
-    Authorization: 'j7SFPFE3zJIYu6h6iyGuD1XaOzIEZCuO8HcfmrGz4UM.eyJpbnN0YW5jZUlkIjoiNGU3NWM3OGItODI3Yi00ZWY4LWFiYTMtYWQyOTRlY2NiYTE0IiwiYXBwRGVmSWQiOiIxMzgwYjcwMy1jZTgxLWZmMDUtZjExNS0zOTU3MWQ5NGRmY2QiLCJtZXRhU2l0ZUlkIjoiZGI1MDk3M2MtNDQ2Yy00ODI2LThhMzQtY2I1NDIwMjM4NTg1Iiwic2lnbkRhdGUiOiIyMDI2LTA0LTI5VDE4OjQzOjQxLjE4M1oiLCJ2ZW5kb3JQcm9kdWN0SWQiOiJzdG9yZXNfc2lsdmVyIiwiZGVtb01vZGUiOmZhbHNlLCJvcmlnaW5JbnN0YW5jZUlkIjoiNjI4NDQwOWQtMjNmMC00NDAwLWIyZDctYjk5ZGVjYjVmNWQyIiwiYWlkIjoiNGM3ZTc0NmUtNDFhZC00OTVmLTliZGItZjY2OGQ5OWM2NWEyIiwiYmlUb2tlbiI6Ijk1MjU1MGI3LWM2MTctMDZkZS0yMTk3LTY2N2Q2ZWVmM2Y5MSIsInNpdGVPd25lcklkIjoiYzkzNTUyNzctMTNiMi00YjM1LThlNDctOTQ3NjA4NTJjMzFiIiwiYnMiOiJibVhKdGNGNnRhZkF0OExXWWJmN1BmSVh4c2NzRnJOZ3o3bkJWNnhDUXlVIiwic2NkIjoiMjAyMS0wMy0xNFQxODo1ODoyNi45ODdaIn0',
-    'X-XSRF-TOKEN': '1777488202|7kztMjojP4TN',
-    Referer: 'https://www.strufe.net/_partials/wix-thunderbolt/dist/clientWorker.00a6ea0d.bundle.min.js',
+const STATIC_HEADERS = {
+    Referer: `${BASE_URL}/_partials/wix-thunderbolt/dist/clientWorker.00a6ea0d.bundle.min.js`,
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
     'Content-Type': 'application/json; charset=utf-8',
 };
@@ -157,7 +156,31 @@ const QUERY = `query getFilteredProducts($mainCollectionId: String!, $filters: P
 `;
 
 export default class StrufeMeteoriteParser implements Parser {
+    private async fetchFreshHeaders(): Promise<typeof STATIC_HEADERS & {Authorization: string, 'X-XSRF-TOKEN': string}> {
+        const WIX_ECOMMERCE_APP_ID = '1380b703-ce81-ff05-f115-39571d94dfcd';
+        const response = await axios.get(`${BASE_URL}/_api/v1/access-tokens`, {
+            headers: {'User-Agent': STATIC_HEADERS['User-Agent']},
+        });
+
+        const authorization: string = response.data?.apps?.[WIX_ECOMMERCE_APP_ID]?.instance;
+        if (!authorization) throw new Error('StrufeMeteoriteParser: could not find Wix instance token');
+
+        const setCookies: string[] = ([] as string[]).concat(response.headers['set-cookie'] ?? []);
+        let xsrfToken = '';
+        for (const cookie of setCookies) {
+            const m = cookie.match(/XSRF-TOKEN=([^;]+)/);
+            if (m) {
+                xsrfToken = decodeURIComponent(m[1]);
+                break;
+            }
+        }
+        if (!xsrfToken) throw new Error('StrufeMeteoriteParser: could not find XSRF token in cookies');
+
+        return {...STATIC_HEADERS, Authorization: authorization, 'X-XSRF-TOKEN': xsrfToken};
+    }
+
     async getMeteoritePrices(): Promise<Array<MeteoritePrice>> {
+        const headers = await this.fetchFreshHeaders();
         const results: Array<MeteoritePrice> = [];
         const limit = 100;
         let offset = 0;
@@ -177,7 +200,7 @@ export default class StrufeMeteoriteParser implements Parser {
                 query: QUERY,
                 source: 'WixStoresWebClient',
                 operationName: 'getFilteredProducts',
-            }, {headers: HEADERS});
+            }, {headers});
 
             const {totalCount: count, list} = response.data.data.catalog.category.productsWithMetaData;
             totalCount = count;
