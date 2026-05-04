@@ -2,7 +2,7 @@ export default function cleanMeteoriteName(name: string): string {
     return name
         .replace(/\s*\([^)]*\)/g, '') // remove parenthesised classifications, e.g. "(L6)"
         .replace(/\bNor[dt]h?\s*West\s+Africa\b/gi, 'NWA') // normalise "North/Nord West Africa" → "NWA"
-        .replace(/\S*(meteorit|mond|lunar|mars|moon|individual|complete|stone|slice|fragment)\S*/gi, '') // remove descriptive words
+        .replace(/\S*(meteorit|iron|eisen|pallasite|silicate|metal|eucrite|carbonaceous|chondrite|C2|CM2|CV3|LL5|LL6|H5|EH5|mond|lunar|mars|moon|individual|complete|stone|slice|fragment)\S*/gi, '') // remove descriptive words
         .replace(/\s*-\s*Main\s+Mass\b.*/gi, '') // remove "- Main Mass" suffix and everything after
         .replace(/^\d+\s+/, '') // remove leading catalogue number, e.g. "4 NWA XXX" → "NWA XXX"
         .replace(/\s*-+\s*$/, '') // remove trailing dashes
